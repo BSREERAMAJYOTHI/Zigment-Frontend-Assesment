@@ -1,0 +1,175 @@
+{
+    "workflow": {
+      "trigger": {
+        "type": "google_forms",
+        "event": "new_response",
+        "form_id": "YOUR_FORM_ID"
+      },
+      "actions": [
+        {
+          "action": {
+            "type": "filter",
+            "conditions": [
+              {
+                "field": "Company Size",
+                "operator": "is_empty"
+              },
+              {
+                "field": "Annual Budget",
+                "operator": "is_empty"
+              },
+              {
+                "field": "Industry",
+                "operator": "is_empty"
+              },
+              {
+                "field": "Urgency of Need",
+                "operator": "is_empty"
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "type": "calculator",
+            "operation": "add",
+            "fields": [
+              {
+                "field": "Company Size",
+                "value": {
+                  "1-50 employees": 10,
+                  "51-200 employees": 20,
+                  "201-1000 employees": 30,
+                  "1000+ employees": 40
+                }
+              },
+              {
+                "field": "Annual Budget",
+                "value": {
+                  "Less than $10,000": 10,
+                  "$10,000-$50,000": 20,
+                  "$50,001-$100,000": 30,
+                  "More than $100,000": 40
+                }
+              },
+              {
+                "field": "Industry",
+                "value": {
+                  "Technology": 30,
+                  "Finance": 25,
+                  "Healthcare": 20,
+                  "Retail": 15,
+                  "Other": 10
+                }
+              },
+              {
+                "field": "Urgency of Need",
+                "value": {
+                  "Immediate": 40,
+                  "Short-term": 30,
+                  "Medium-term": 20,
+                  "Long-term": 10
+                }
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "type": "google_sheets",
+            "method": "append_row",
+            "spreadsheet_id": "YOUR_SPREADSHEET_ID",
+            "sheet_name": "Qualified Leads",
+            "fields": [
+              {
+                "field": "Name",
+                "value": "{{197739}}"
+              },
+              {
+                "field": "Email",
+                "value": "{{197740}}"
+              },
+              {
+                "field": "Company Size",
+                "value": "{{197741}}"
+              },
+              {
+                "field": "Annual Budget",
+                "value": "{{197742}}"
+              },
+              {
+                "field": "Industry",
+                "value": "{{197743}}"
+              },
+              {
+                "field": "Urgency of Need",
+                "value": "{{197744}}"
+              },
+              {
+                "field": "Lead Score",
+                "value": "{{calculator_1}}"
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "type": "gmail",
+            "method": "send_email",
+            "to": "{{197740}}",
+            "subject": "Welcome to TechNova!",
+            "body": "Dear {{197739}},\n\nWelcome to TechNova! We're excited to have you on board.\n\nBest regards,\n[Your Name]",
+            "conditions": [
+              {
+                "field": "Lead Score",
+                "operator": ">",
+                "value": 70
+              }
+            ]
+          }
+        },
+        {
+          "action": {
+            "type": "google_sheets",
+            "method": "append_row",
+            "spreadsheet_id": "YOUR_SPREADSHEET_ID",
+            "sheet_name": "Nurturing Campaigns",
+            "fields": [
+              {
+                "field": "Name",
+                "value": "{{197739}}"
+              },
+              {
+                "field": "Email",
+                "value": "{{197740}}"
+              },
+              {
+                "field": "Company Size",
+                "value": "{{197741}}"
+              },
+              {
+                "field": "Annual Budget",
+                "value": "{{197742}}"
+              },
+              {
+                "field": "Industry",
+                "value": "{{197743}}"
+              },
+              {
+                "field": "Urgency of Need",
+                "value": "{{197744}}"
+              }
+            ],
+            "conditions": [
+              {
+                "field": "Lead Score",
+                "operator": "<=",
+                "value": 70
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+  
